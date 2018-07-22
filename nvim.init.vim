@@ -1,19 +1,31 @@
 call plug#begin('~/.local/share/nvim/plugged')
 
-Plug 'kien/ctrlp.vim'
+Plug 'ctrlpvim/ctrlp.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/nerdcommenter'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'myusuf3/numbers.vim'
+Plug 'easymotion/vim-easymotion'
+Plug 'rking/ag.vim'
 
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 Plug 'flazz/vim-colorschemes'
+Plug 'prettier/vim-prettier', {
+            \ 'do': 'yarn install',
+            \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'javascript.jsx'] }
+Plug 'floobits/floobits-neovim'
+Plug 'tpope/vim-sleuth'
 
 Plug 'zchee/deoplete-go', { 'do': 'make'}
 Plug 'fatih/vim-go'
 Plug 'nsf/gocode', { 'rtp': 'nvim', 'do': '~/.config/nvim/plugged/gocode/nvim/symlink.sh' }
+Plug 'pangloss/vim-javascript'
+Plug 'mxw/vim-jsx'
+Plug 'digitaltoad/vim-pug'
 
 call plug#end()
 
@@ -41,8 +53,24 @@ set tabstop=4 softtabstop=0 expandtab shiftwidth=4 smarttab
 
 set nobackup
 set pastetoggle=<F4>
+set scrolloff=5
 
 colorscheme molokai
+
+" Put plugins and dictionaries in this dir (also on Windows)
+let vimDir = '$HOME/.config/nvim'
+let &runtimepath.=','.vimDir
+
+" Keep undo history across sessions by storing it in a file
+if has('persistent_undo')
+    let myUndoDir = expand(vimDir . '/undodir')
+
+    " Create dirs
+    call system('mkdir ' . vimDir)
+    call system('mkdir ' . myUndoDir)
+    let &undodir = myUndoDir
+    set undofile
+endif
 
 " Vim status line settings
 let g:airline_powerline_fonts = 1
@@ -89,6 +117,8 @@ let g:ctrlp_user_command = {
             \ -g ""'
             \ }
 
+let g:ctrlp_match_window = 'max:20,results=100'
+
 let mapleader = ','
 
 " Show invisible characters.
@@ -108,6 +138,9 @@ nnoremap td  :tabclose<CR>
 nnoremap nt  :NERDTreeToggle<CR>
 
 nnoremap <F4> :set hlsearch!<CR>
+
+nnoremap <Leader>yy :set clipboard=unnamedplus<CR>
+nnoremap <Leader>yc :set clipboard=<CR>
 
 " GoLang settings.
 autocmd FileType go nmap <Leader>gdc <Plug>(go-doc)
@@ -134,6 +167,8 @@ let g:go_fmt_autosave = 0
 let g:go_def_mode = "godef"
 
 let g:deoplete#enable_at_startup = 1
+
+let g:javascript_plugin_jsdoc = 1
 
 " Let <Tab> also do completion
 inoremap <silent><expr> <Tab>
