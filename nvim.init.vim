@@ -17,15 +17,15 @@ Plug 'flazz/vim-colorschemes'
 Plug 'prettier/vim-prettier', {
             \ 'do': 'yarn install',
             \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'javascript.jsx'] }
-Plug 'floobits/floobits-neovim'
 Plug 'tpope/vim-sleuth'
 
 Plug 'zchee/deoplete-go', { 'do': 'make'}
 Plug 'fatih/vim-go'
-Plug 'nsf/gocode', { 'rtp': 'nvim', 'do': '~/.config/nvim/plugged/gocode/nvim/symlink.sh' }
+Plug 'mdempsky/gocode', { 'rtp': 'nvim', 'do': '~/.config/nvim/plugged/gocode/nvim/symlink.sh' }
 Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
 Plug 'digitaltoad/vim-pug'
+Plug 'octol/vim-cpp-enhanced-highlight'
 
 call plug#end()
 
@@ -52,7 +52,7 @@ set noet nowrap tw=0 ww=0
 set tabstop=4 softtabstop=0 expandtab shiftwidth=4 smarttab
 
 set nobackup
-set pastetoggle=<F4>
+set pastetoggle=<F5>
 set scrolloff=5
 
 colorscheme molokai
@@ -81,14 +81,6 @@ let g:airline_powerline_fonts = 1
 if !exists('g:airline_symbols')
    let g:airline_symbols = {}
 endif
-"let g:airline_left_sep = ':arrow_forward:'
-let g:airline_left_sep = ''
-"let g:airline_right_sep = ':arrow_backward:'
-let g:airline_right_sep = ''
-let g:airline_symbols.linenr = '¶'
-let g:airline_symbols.branch = '⎇'
-let g:airline_symbols.paste = '∥'
-let g:airline_symbols.whitespace = 'Ξ'
 
 " Ctrlp-funky highlight syntax
 let g:ctrlp_funky_syntax_highlight = 1
@@ -158,7 +150,10 @@ let g:go_highlight_types = 1
 let g:go_highlight_operators = 1
 let g:go_highlight_build_constraints = 1
 let g:go_highlight_extra_types = 1
+let g:go_highlight_structs = 1
 let g:go_highlight_generate_tags = 1
+
+let g:go_auto_type_info = 1
 
 let g:go_fmt_command = "goimports"
 let g:go_autodetect_gopath = 1
@@ -167,6 +162,8 @@ let g:go_fmt_autosave = 0
 let g:go_def_mode = "godef"
 
 let g:deoplete#enable_at_startup = 1
+let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
+let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
 
 let g:javascript_plugin_jsdoc = 1
 
