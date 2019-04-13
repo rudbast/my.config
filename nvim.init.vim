@@ -1,4 +1,4 @@
-call plug#begin('~/.local/share/nvim/plugged')
+call plug#begin('~/.config/nvim/plugged')
 
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'scrooloose/nerdtree'
@@ -8,6 +8,10 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'myusuf3/numbers.vim'
 Plug 'easymotion/vim-easymotion'
 Plug 'rking/ag.vim'
+Plug 'terryma/vim-multiple-cursors'
+Plug 'yggdroot/indentline'
+Plug 'junegunn/goyo.vim'
+Plug 'junegunn/limelight.vim'
 
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
@@ -15,20 +19,27 @@ Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 Plug 'flazz/vim-colorschemes'
 Plug 'prettier/vim-prettier', {
-            \ 'do': 'yarn install',
-            \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'javascript.jsx'] }
+  \ 'do': 'yarn install',
+  \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'javascript.jsx'] }
 Plug 'tpope/vim-sleuth'
+Plug 'majutsushi/tagbar'
+"Plug 'Valloric/YouCompleteMe'
 
-Plug 'zchee/deoplete-go', { 'do': 'make'}
 Plug 'fatih/vim-go'
+Plug 'zchee/deoplete-go', { 'do': 'make'}
 Plug 'mdempsky/gocode', { 'rtp': 'nvim', 'do': '~/.config/nvim/plugged/gocode/nvim/symlink.sh' }
+Plug 'jodosha/vim-godebug'
 Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
-Plug 'digitaltoad/vim-pug'
+"Plug 'digitaltoad/vim-pug'
 Plug 'octol/vim-cpp-enhanced-highlight'
+"Plug 'cespare/vim-toml'
+"Plug 'maralla/vim-toml-enhance', {'depends': 'cespare/vim-toml'}
+Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
 
 call plug#end()
 
+set nocompatible
 filetype off
 filetype plugin indent on
 set ttyfast
@@ -95,21 +106,21 @@ let g:ctrlp_custom_ignore = {
 set grepprg=ag\ --nogroup\ --nocolor
 "let g:ctrlp_user_command = 'ag %s -l --nocolor'
 let g:ctrlp_user_command = {
-            \ 'types': {
-            \ 1: ['.git', 'cd %s && git ls-files'],
-            \ 2: ['.hg', 'hg --cwd %s locate -I .'],
-            \ },
-            \ 'fallback': 'ag %s -l --nocolor --nogroup --hidden
-            \ --ignore out
-            \ --ignore .git
-            \ --ignore .svn
-            \ --ignore .hg
-            \ --ignore .DS_Store
-            \ --ignore "**/*.pyc"
-            \ -g ""'
-            \ }
+  \ 'types': {
+  \ 1: ['.git', 'cd %s && git ls-files'],
+  \ 2: ['.hg', 'hg --cwd %s locate -I .'],
+  \ },
+  \ 'fallback': 'ag %s -l --nocolor --nogroup --hidden
+  \ --ignore out
+  \ --ignore .git
+  \ --ignore .svn
+  \ --ignore .hg
+  \ --ignore .DS_Store
+  \ --ignore "**/*.pyc"
+  \ -g ""'
+  \ }
 
-let g:ctrlp_match_window = 'max:20,results=100'
+let g:ctrlp_match_window = 'max:30,results=100'
 
 let mapleader = ','
 
@@ -130,6 +141,8 @@ nnoremap td  :tabclose<CR>
 nnoremap nt  :NERDTreeToggle<CR>
 
 nnoremap <F4> :set hlsearch!<CR>
+nnoremap <F6> :CtrlPBuffer<CR>
+nnoremap <F8> :TagbarToggle<CR>
 
 nnoremap <Leader>yy :set clipboard=unnamedplus<CR>
 nnoremap <Leader>yc :set clipboard=<CR>
@@ -142,27 +155,33 @@ autocmd FileType go nnoremap <Leader>god :GoDecls<CR>
 autocmd FileType go nnoremap <Leader>gor :GoDeclsDir<CR>
 autocmd FileType go nnoremap <Leader>gsi :GoSameIds<CR>
 autocmd FileType go nnoremap <Leader>gsc :GoSameIdsClear<CR>
+autocmd FileType go nnoremap <Leader>gof :GoFmt<CR>
 
 let g:go_highlight_functions = 1
-let g:go_highlight_methods = 1
-let g:go_highlight_fields = 1
+let g:go_highlight_function_calls = 1
 let g:go_highlight_types = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_methods = 1
 let g:go_highlight_operators = 1
-let g:go_highlight_build_constraints = 1
+let g:go_highlight_format_strings = 1
+let g:go_highlight_variable_declarations = 1
+let g:go_highlight_variable_assignments = 1
 let g:go_highlight_extra_types = 1
 let g:go_highlight_structs = 1
 let g:go_highlight_generate_tags = 1
 
-let g:go_auto_type_info = 1
+let g:go_auto_type_info = 0
 
 let g:go_fmt_command = "goimports"
 let g:go_autodetect_gopath = 1
 let g:go_list_type = "quickfix"
 let g:go_fmt_autosave = 0
 let g:go_def_mode = "godef"
+let g:go_info_mode = "gocode"
+let g:go_decls_include = "func,type"
 
 let g:deoplete#enable_at_startup = 1
-let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
+let g:deoplete#sources#go#gocode_binary = '/home/rudolf/workspace/go/bin/gocode'
 let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
 
 let g:javascript_plugin_jsdoc = 1
@@ -174,3 +193,8 @@ inoremap <silent><expr> <Tab>
 
 " Close the documentation window when completion is done
 autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+
+let g:goyo_width = 100
+
+autocmd! User GoyoEnter Limelight
+autocmd! User GoyoLeave Limelight!
